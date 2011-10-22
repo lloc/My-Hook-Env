@@ -26,7 +26,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 function my_msls_blog_collection_get( $objects ) {
-    $object   = array( 1 => 'Override English', 2 => 'Override Deutsch', );
+    $objects = array();
+    $arr     = array( 1, 2, );
+    foreach ( $arr as $id ) {
+        $objects[$id] = get_blog_details( $id );
+    }
     return $objects;
 }
 add_filter( 'msls_blog_collection_construct', 'my_msls_blog_collection_get' );
