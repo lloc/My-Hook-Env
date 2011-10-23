@@ -59,7 +59,7 @@ function my_msls_output_get( $url, $link, $current ) {
          * Class MslsLink has defined a __toString-method
          */  
         $link
-    )
+    );
 }
 add_filter( 'msls_output_get', 'my_msls_output_get', 10, 3 );
 
