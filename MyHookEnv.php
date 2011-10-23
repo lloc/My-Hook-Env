@@ -3,36 +3,64 @@
 /*
 Plugin Name: My Hook Env
 Description: Overrides the hooks in my test environment
-Version: 0.1a
+Version: 0.1
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
 
-/*
-Copyright 2011  Dennis Ploetner  (email : re@lloc.de)
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
-function my_msls_blog_collection_get( $objects ) {
-    $objects = array();
-    $arr     = array( 1, 2, );
-    foreach ( $arr as $id ) {
-        $objects[$id] = get_blog_details( $id );
+/**
+ * Example - How to filter the blog collection
+ * 
+ * @param array $arr
+ * @return array
+ */ 
+function my_msls_blog_collection_get( $arr ) {
+    /*
+     * Resets the parameter
+     */
+    $arr = array();
+    /*
+     * Creates a collection with just 2 blogs ( blog_id == 1 and blog_id == 2 )
+     */ 
+    foreach ( array( 1, 2, ) as $id ) {
+        $arr[$id] = get_blog_details( $id );
     }
-    return $objects;
+    return $arr;
 }
 add_filter( 'msls_blog_collection_construct', 'my_msls_blog_collection_get' );
+
+/**
+ * Example - How to filter the output of the links in the frontend
+ * 
+ * @param string $url
+ * @param MslsLink $link
+ * @param bool $current
+ * @return string
+ */
+function my_msls_output_get( $url, $link, $current ) {
+    return sprintf(
+        /*
+         * Returns the same html code like MslsOutput
+         */
+        '<a href="%s" title="%s"%s>%s</a>',
+        /*
+         * Uses just the path instead of the complete URL
+         */ 
+        parse_url( $url, PHP_URL_PATH ),
+        /*
+         * $link is an instance of MslsLink
+         */
+        $link->txt,
+        /*
+         * Changes the class for the current element too
+         */
+        ( $current ? ' class="current"' : '' ),
+        /*
+         * Class MslsLink has defined a __toString-method
+         */  
+        $link
+    )
+}
+add_filter( 'msls_output_get', 'my_msls_output_get', 10, 3 );
 
 ?>
